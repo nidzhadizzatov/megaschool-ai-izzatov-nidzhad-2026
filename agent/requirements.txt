@@ -1,0 +1,19 @@
+# Core
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+python-dotenv==1.0.0
+
+# GitHub
+PyGithub==2.1.1
+GitPython==3.1.41
+
+# LLM
+openai>=1.10.0
+
+# Database
+tinydb==4.8.0
+
+# Code quality (for reviewer)
+ruff>=0.1.14
+pytest>=7.4.4

@@ -1,0 +1,67 @@
+# Agent Ignore File
+# Patterns of files that the Coding Agent should NOT modify or analyze
+# Similar to .gitignore syntax
+
+# Dependencies
+node_modules/
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+
+# Environment & secrets
+.env
+.env.*
+*.pem
+*.key
+
+# Configuration files (should be changed manually)
+.github/
+*.yml
+*.yaml
+
+# Lock files
+package-lock.json
+yarn.lock
+poetry.lock
+Pipfile.lock
+
+# Database & data
+*.db
+*.sqlite
+*.json
+data/
+
+# Logs
+*.log
+logs/
+
+# Tests (agent shouldn't modify tests without explicit request)
+# tests/
+# *_test.py
+# test_*.py
+
+# Documentation that shouldn't be auto-edited
+CHANGELOG.md
+LICENSE
+CONTRIBUTING.md
+
+# CI/CD
+.gitlab-ci.yml
+Jenkinsfile
+azure-pipelines.yml
+
+# Docker (should be changed manually)
+Dockerfile
+docker-compose*.yml
+.dockerignore

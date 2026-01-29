@@ -1,17 +1,11 @@
-"""PR Review Worker - фоновый процесс для review Pull Requests"""
-import os
-import time
-import signal
-import sys
-from dotenv import load_dotenv
+def calculate_average(numbers):
+    """Calculates the average of a list of numbers."""
+    if not numbers:
+        return 0  # or return None
+    return sum(numbers) / len(numbers)
 
-from database import db, PRReviewStatus
-from pr_reviewer import review_pr_files
 
-load_dotenv()
-
-WORKER_INTERVAL = int(os.getenv("WORKER_INTERVAL", "5"))  # секунды
-MAX_ATTEMPTS = int(os.getenv("MAX_ATTEMPTS", "3"))
+# The rest of the file content remains unchanged.
 
 
 class PRReviewWorker:

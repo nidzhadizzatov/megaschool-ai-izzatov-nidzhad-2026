@@ -4,7 +4,6 @@
 Используется для демонстрации работы Coding Agent.
 """
 
-
 def calculate_average(numbers: list) -> float:
     """Вычисляет среднее значение списка чисел.
     
@@ -16,7 +15,9 @@ def calculate_average(numbers: list) -> float:
     Returns:
         Среднее значение
     """
-    # BUG: Не проверяем пустой список
+    # Проверка на пустой список
+    if not numbers:
+        return 0  # или None, в зависимости от требований
     total = sum(numbers)
     return total / len(numbers)
 
@@ -73,6 +74,8 @@ def divide_numbers(a: float, b: float) -> float:
         Результат деления
     """
     # BUG: Нет проверки b != 0
+    if b == 0:
+        raise ValueError("Деление на ноль невозможно")
     return a / b
 
 
@@ -107,6 +110,8 @@ def fibonacci(n: int) -> int:
         Число Фибоначчи
     """
     # BUG: Нет проверки n < 0
+    if n < 0:
+        raise ValueError("n должно быть неотрицательным")
     if n <= 1:
         return n
     return fibonacci(n - 1) + fibonacci(n - 2)

@@ -1,54 +1,13 @@
-"""Утилиты для демо-приложения"""
-from datetime import datetime
-
-
-def greet(name: str) -> str:
-    """Возвращает приветствие.
+def calculate_average(numbers: list) -> float:
+    """Calculates the average of a list of numbers.
     
     Args:
-        name: Имя для приветствия
-        
-    Returns:
-        Строка приветствия
-    """
-    return f"Hello, {name}!"
-
-
-def format_date(date: datetime = None) -> str:
-    """Форматирует дату.
+        numbers: A list of numbers to calculate the average of.
     
-    Args:
-        date: Дата для форматирования (по умолчанию - сегодня)
-        
     Returns:
-        Отформатированная дата
+        The average of the numbers, or 0 if the list is empty.
     """
-    if date is None:
-        date = datetime.now()
-    return date.strftime("%Y-%m-%d")
+    if not numbers:
+        return 0
+    return sum(numbers) / len(numbers)
 
-
-def validate_email(email: str) -> bool:
-    """Простая валидация email.
-    
-    Args:
-        email: Email для проверки
-        
-    Returns:
-        True если email валидный
-    """
-    return "@" in email and "." in email.split("@")[-1]
-
-
-def clamp(value: int | float, min_val: int | float, max_val: int | float) -> int | float:
-    """Ограничивает значение в диапазоне.
-    
-    Args:
-        value: Значение
-        min_val: Минимум
-        max_val: Максимум
-        
-    Returns:
-        Ограниченное значение
-    """
-    return max(min_val, min(value, max_val))

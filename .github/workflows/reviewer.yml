@@ -112,17 +112,16 @@ jobs:
           path: .
         continue-on-error: true
       
-      - name: AI Review
+      - name: AI Review using CLI
         working-directory: agent
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
+          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL || 'https://api.openai.com/v1' }}
           OPENAI_MODEL: ${{ secrets.OPENAI_MODEL || 'gpt-4o-mini' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GITHUB_REPO: ${{ github.repository }}
         run: |
-          python pr_reviewer.py ${{ github.event.pull_request.number }}
+          python cli.py review-pr ${{ github.repository }} ${{ github.event.pull_request.number }}
       
       - name: Check if fixes needed
         id: check_fixes

@@ -95,11 +95,55 @@
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│  User creates   │────▶│  Code Agent     │────▶│  Creates PR     │
-│     Issue       │     │  analyzes &     │     │  with fixes     │
-└─────────────────┘     │  fixes code     │     └────────┬────────┘
-                        └─────────────────┘              │
-                                                         ▼
+│  User creates│─────▶│  GitHub      │─────▶│ Code Agent   │
+│     Issue    │      │  Actions     │      │    (CLI)     │
+└──────────────┘      │  triggered   │      └──────┬───────┘
+                      └──────────────┘             │
+                                                   ▼
+                                          Analyze & Fix Code
+                                                   │
+                                                   ▼
+┌──────────────┐      ┌──────────────┐      ┌──────────────┐
+│  PR merged   │◀─────│  AI Reviewer │◀─────│  Create PR   │
+│  Issue closed│      │    (CLI)     │      │              │
+└──────────────┘      └──────────────┘      └──────────────┘
+```
+
+### Part I: Issue → PR Flow (через GitHub Actions)
+
+```
+Issue Created
+      ↓
+GitHub Actions Workflow
+      ↓
+python cli.py process-issue owner/repo 123
+      ↓
+Code Agent:
+  - Clone to repos/{UUID}/
+  - Analyze files (skip agent_ignore.txt)
+  - Fix × 3 iterations
+  - Create PR
+  - Cleanup repos/{UUID}/
+      ↓
+PR Created
+```
+
+### Part II: PR → Review Flow (через GitHub Actions)
+
+```
+PR Created/Updated
+      ↓
+GitHub Actions Workflow
+      ↓
+python cli.py review-pr owner/repo 456
+      ↓
+AI Reviewer:
+  - Get changed files only
+  - Review each file
+  - Post comment
+      ↓
+Review Complete
+```
 ### Part I: Issue → PR Flow
 
 ```

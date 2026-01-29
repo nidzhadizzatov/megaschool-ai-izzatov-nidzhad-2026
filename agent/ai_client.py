@@ -1,4 +1,3 @@
-"""AI Client - OpenAI API wrapper для анализа кода"""
 import os
 import json
 from pathlib import Path
@@ -12,14 +11,12 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
 MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
-
 @dataclass
 class AnalysisResult:
     """Результат анализа файла"""
     issue_found: bool
     code_correction: str
     explanation: str = ""
-
 
 @dataclass
 class ReviewResult:
@@ -28,7 +25,6 @@ class ReviewResult:
     summary: str
     issues: list[str]
     suggestions: list[str]
-
 
 ANALYSIS_PROMPT = """You are an expert code reviewer. Analyze this file for the described issue.
 
@@ -55,10 +51,7 @@ ANALYSIS_PROMPT = """You are an expert code reviewer. Analyze this file for the 
     "issue_found": true/false,
     "code_correction": "COMPLETE file content with fixes, or empty string if no changes",
     "explanation": "Brief explanation of what was found/fixed"
-}}
-
-Return ONLY valid JSON, no markdown, no additional text."""
-
+}}"""
 
 REVIEW_PROMPT = """You are an expert code reviewer. Review this Pull Request thoroughly.
 
@@ -90,7 +83,6 @@ Return ONLY valid JSON:
     "suggestions": ["non-blocking suggestions"],
     "score": 1-10
 }}"""
-
 
 class AIClient:
     """OpenAI client для анализа кода и ревью"""
@@ -188,8 +180,7 @@ class AIClient:
             )
         except Exception as e:
             print(f"❌ Review failed: {e}")
-            return ReviewResult(approved=False, summary=str(e), issues=[], suggestions=[])
-    
+            return ReviewResult(approved=False, summary=str(e), issues=[], suggestions=[])    
     def generate_code(
         self,
         file_path: str,

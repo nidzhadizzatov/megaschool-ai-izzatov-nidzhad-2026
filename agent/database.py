@@ -1,4 +1,3 @@
-"""Database - TinyDB wrapper для хранения Issues"""
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
@@ -277,6 +276,14 @@ class IssueDB:
             "updated_at": datetime.now().isoformat()
         }, doc_ids=[doc_id])
         return attempts
+
+    def get_tasks(self) -> list:
+        """Получить все задачи, отсортированные по приоритету."""
+        results = self.issues.all()
+        for r in results:
+            r['doc_id'] = r.doc_id
+        # Сортируем задачи по приоритету в порядке убывания
+        return sorted(results, key=lambda x: x.get('priority', 0), reverse=True)
 
 
 # Singleton instance

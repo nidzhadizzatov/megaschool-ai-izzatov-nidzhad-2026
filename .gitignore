@@ -1,3 +1,4 @@
+# Python
 __pycache__/
 *.pyc
 *.pyo
@@ -12,17 +13,31 @@ htmlcov/
 dist/
 build/
 *.egg-info/
+
+# IDEs
 .vscode/
 .idea/
+*.swp
+*.swo
+
+# Logs
 *.log
+
+# Environment
 .env
+.env.local
+.env.*.local
 
 # Database
 *.db
 db.json
-data/
 agent/db.json
+
+# Agent cloned repositories (UUID-based folders)
+repos/
 agent/repos/
 
-# Repos cloned by agent
-repos/
+# Data
+data/
+agent/data/
+

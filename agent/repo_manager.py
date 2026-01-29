@@ -6,6 +6,7 @@ from pathlib import Path
 from git import Repo, GitCommandError
 from github import Github, GithubException
 from dotenv import load_dotenv
+import fnmatch
 
 load_dotenv()
 
@@ -86,21 +87,69 @@ class RepoManager:
             raise
     
     def get_files(self, extensions: list[str] = None) -> list[Path]:
-        """Получает список файлов в репо."""
+        """Получает список файлов в репо с учётом .github/agent_ignore.txt."""
         if extensions is None:
             extensions = [".py", ".js", ".ts", ".jsx", ".tsx"]
+        
+        # Загружаем ignore patterns из .github/agent_ignore.txt
+        ignore_patterns = self._load_agent_ignore()
         
         files = []
         for ext in extensions:
             files.extend(self.repo_path.rglob(f"*{ext}"))
         
+        # Базовые исключения
         excluded = {".git", "__pycache__", "node_modules", ".venv", "venv", ".tox", "dist", "build"}
-        files = [
-            f for f in files 
-            if not any(ex in f.parts for ex in excluded)
-        ]
         
-        return sorted(files)
+        # Фильтруем файлы
+        filtered_files = []
+        for f in files:
+            # Проверяем базовые исключения
+            if any(ex in f.parts for ex in excluded):
+                continue
+            
+            # Проверяем agent_ignore patterns
+            relative_path = f.relative_to(self.repo_path)
+            if self._should_ignore(relative_path, ignore_patterns):
+                continue
+            
+            filtered_files.append(f)
+        
+        return sorted(filtered_files)
+    
+    def _load_agent_ignore(self) -> list[str]:
+        """Загружает patterns из .github/agent_ignore.txt."""
+        ignore_file = self.repo_path / ".github" / "agent_ignore.txt"
+        patterns = []
+        
+        if ignore_file.exists():
+            try:
+                content = ignore_file.read_text(encoding="utf-8")
+                for line in content.splitlines():
+                    line = line.strip()
+                    # Пропускаем комментарии и пустые строки
+                    if line and not line.startswith("#"):
+                        patterns.append(line)
+                print(f"📋 Loaded {len(patterns)} ignore patterns from agent_ignore.txt")
+            except Exception as e:
+                print(f"⚠️ Failed to load agent_ignore.txt: {e}")
+        
+        return patterns
+    
+    def _should_ignore(self, path: Path, patterns: list[str]) -> bool:
+        """Проверяет, нужно ли игнорировать файл по patterns."""
+        path_str = str(path).replace("\\", "/")
+        
+        for pattern in patterns:
+            # Поддержка директорий (заканчиваются на /)
+            if pattern.endswith("/"):
+                if path_str.startswith(pattern.rstrip("/")):
+                    return True
+            # Поддержка glob patterns
+            elif fnmatch.fnmatch(path_str, pattern) or fnmatch.fnmatch(path.name, pattern):
+                return True
+        
+        return False
     
     def read_file(self, filepath: Path) -> str:
         """Читает содержимое файла."""

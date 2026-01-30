@@ -1,54 +1,20 @@
-"""Утилиты для демо-приложения"""
-from datetime import datetime
+from flask import Flask, jsonify
 
+app = Flask(__name__)
 
-def greet(name: str) -> str:
-    """Возвращает приветствие.
+tasks = []  # Example task list
+
+@app.route('/tasks/stats', methods=['GET'])
+def get_task_stats():
+    total = len(tasks)
+    done = sum(1 for task in tasks if task['status'] == 'done')
     
-    Args:
-        name: Имя для приветствия
-        
-    Returns:
-        Строка приветствия
-    """
-    return f"Hello, {name}!"
-
-
-def format_date(date: datetime = None) -> str:
-    """Форматирует дату.
+    if total == 0:
+        completion_rate = 0  # Set completion rate to 0 when there are no tasks
+    else:
+        completion_rate = (done / total) * 100  # Calculate completion rate
     
-    Args:
-        date: Дата для форматирования (по умолчанию - сегодня)
-        
-    Returns:
-        Отформатированная дата
-    """
-    if date is None:
-        date = datetime.now()
-    return date.strftime("%Y-%m-%d")
+    return jsonify({'total': total, 'done': done, 'completion_rate': completion_rate})
 
-
-def validate_email(email: str) -> bool:
-    """Простая валидация email.
-    
-    Args:
-        email: Email для проверки
-        
-    Returns:
-        True если email валидный
-    """
-    return "@" in email and "." in email.split("@")[-1]
-
-
-def clamp(value: int | float, min_val: int | float, max_val: int | float) -> int | float:
-    """Ограничивает значение в диапазоне.
-    
-    Args:
-        value: Значение
-        min_val: Минимум
-        max_val: Максимум
-        
-    Returns:
-        Ограниченное значение
-    """
-    return max(min_val, min(value, max_val))
+if __name__ == '__main__':
+    app.run(debug=True)

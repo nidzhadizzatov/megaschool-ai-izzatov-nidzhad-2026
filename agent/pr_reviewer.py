@@ -1,4 +1,3 @@
-"""PR Reviewer - автоматический ревью Pull Requests"""
 import os
 import sys
 import json
@@ -9,39 +8,9 @@ from ai_client import ai_client
 
 load_dotenv()
 
-
 def review_file_for_issue(file_content: str, file_path: str, issue_description: str) -> dict:
-    """Review одного файла на соответствие решению issue.
-    
-    Args:
-        file_content: Содержимое файла
-        file_path: Путь к файлу
-        issue_description: Описание исходного issue
-        
-    Returns:
-        { issue_solved: boolean, notes: string }
-    """
-    prompt = f"""Вы - опытный код-ревьюер. Проверьте, решает ли этот файл описанную проблему.
-
-ИСХОДНАЯ ПРОБЛЕМА:
-{issue_description}
-
-ФАЙЛ: {file_path}
-```
-{file_content}
-```
-
-Проанализируйте:
-1. Решает ли этот файл описанную проблему?
-2. Есть ли ошибки в коде?
-3. Соблюдены ли best practices?
-
-ОБЯЗАТЕЛЬНО ответьте ТОЛЬКО в формате JSON:
-{{
-  "issue_solved": true/false,
-  "notes": "Подробные заметки о том, что хорошо, что плохо, что исправлено"
-}}
-"""
+    """Review одного файла на соответствие решению issue.\n    \n    Args:\n        file_content: Содержимое файла\n        file_path: Путь к файлу\n        issue_description: Описание исходного issue\n        \n    Returns:\n        { issue_solved: boolean, notes: string }\n    """
+    prompt = f"""Вы - опытный код-ревьюер. Проверьте, решает ли этот файл описанную проблему.\n    \n    ИСХОДНАЯ ПРОБЛЕМА:\n    {issue_description}\n    \n    ФАЙЛ: {file_path}\n    ```\n    {file_content}\n    ```\n    Проанализируйте:\n    1. Решает ли этот файл описанную проблему?\n    2. Есть ли ошибки в коде?\n    3. Соблюдены ли best practices?\n    \n    ОБЯЗАТЕЛЬНО ответьте ТОЛЬКО в формате JSON:\n    {{\n      "issue_solved": true/false,\n      "notes": "Подробные заметки о том, что хорошо, что плохо, что исправлено"\n    }}\n    """
     
     try:
         response = ai_client._call([{"role": "user", "content": prompt}], temperature=0.2)
@@ -79,23 +48,8 @@ def review_file_for_issue(file_content: str, file_path: str, issue_description: 
             "notes": f"Error during file review: {e}"
         }
 
-
 def review_pr_files(pr_number: int, repo_name: str = None, changed_files: list = None) -> dict:
-    """Выполняет ревью файлов из PR.
-    
-    Args:
-        pr_number: Номер PR
-        repo_name: owner/repo (опционально, берётся из env)
-        changed_files: Список файлов для review (если пустой - получим из GitHub)
-        
-    Returns:
-        {
-            success: bool,
-            review_results: [{file, issue_solved, notes}],
-            all_passed: bool,
-            comment: str
-        }
-    """
+    """Выполняет ревью файлов из PR.\n    \n    Args:\n        pr_number: Номер PR\n        repo_name: owner/repo (опционально, берётся из env)\n        changed_files: Список файлов для review (если пустой - получим из GitHub)\n        \n    Returns:\n        {\n            success: bool,\n            review_results: [{file, issue_solved, notes}],\n            all_passed: bool,\n            comment: str\n        }\n    """
     token = os.getenv("GITHUB_TOKEN")
     repo_name = repo_name or os.getenv("GITHUB_REPO")
     
@@ -161,22 +115,14 @@ def review_pr_files(pr_number: int, repo_name: str = None, changed_files: list =
         # Формируем комментарий для GitHub
         status_emoji = "✅" if all_passed else "⚠️"
         
-        comment = f"""## {status_emoji} AI Code Review
-
-**PR:** #{pr_number}  
-**Files reviewed:** {len(review_results)}  
-**Status:** {"All checks passed" if all_passed else "Issues found"}
-
----
-
-"""
+        comment = f"""## {status_emoji} AI Code Review\n\n**PR:** #{pr_number}  \n**Files reviewed:** {len(review_results)}  \n**Status:** {"All checks passed" if all_passed else "Issues found"}\n\n---\n"""
         
         for result in review_results:
             status = "✅ PASSED" if result["issue_solved"] else "❌ NEEDS WORK"
             comment += f"### {status}: `{result['file']}`\n\n"
             comment += f"{result['notes']}\n\n"
         
-        comment += "---\n🤖 *Automated review by Coding Agent*"
+        comment += "---\n🤖 *Automated review by Coding Agent*" 
         
         # Добавляем комментарий к PR
         try:

@@ -1,4 +1,3 @@
-"""Database - TinyDB wrapper для хранения Issues"""
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
@@ -152,16 +151,20 @@ class IssueDB:
         """Получить статистику."""
         Issue = Query()
         Review = Query()
+        total = len(self.issues.all())
+        completed = len(self.issues.search(Issue.status == IssueStatus.COMPLETED))
+        completion_rate = (0 if total == 0 else (completed / total) * 100)
         return {
             "pending": len(self.issues.search(Issue.status == IssueStatus.PENDING)),
             "processing": len(self.issues.search(Issue.status == IssueStatus.PROCESSING)),
-            "completed": len(self.issues.search(Issue.status == IssueStatus.COMPLETED)),
+            "completed": completed,
             "failed": len(self.issues.search(Issue.status == IssueStatus.FAILED)),
-            "total": len(self.issues.all()),
+            "total": total,
             "pr_pending": len(self.pr_reviews.search(Review.status == PRReviewStatus.PENDING)),
             "pr_reviewing": len(self.pr_reviews.search(Review.status == PRReviewStatus.REVIEWING)),
             "pr_approved": len(self.pr_reviews.search(Review.status == PRReviewStatus.APPROVED)),
-            "pr_rejected": len(self.pr_reviews.search(Review.status == PRReviewStatus.REJECTED))
+            "pr_rejected": len(self.pr_reviews.search(Review.status == PRReviewStatus.REJECTED)),
+            "completion_rate": completion_rate
         }
     
     # ==================== PR Review Methods ====================

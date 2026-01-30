@@ -835,6 +835,3 @@ FastAPI Server (:8000)
 - **GitHub**: https://github.com/izzatov-nidzhad
 - **Репозиторий**: https://github.com/izzatov-nidzhad/megaschool-ai-izzatov-nidzhad-2026
 
----
-
-**Bro, if you deliver this in this format, with the app running live, it's going to be perfect** 🚀

@@ -1,7 +1,7 @@
 # Core
-fastapi==0.109.0
-uvicorn[standard]==0.27.0
-pydantic==2.5.3
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+pydantic>=2.10.0
 python-dotenv==1.0.0
 
 # GitHub
@@ -14,6 +14,6 @@ openai>=1.10.0
 # Database
 tinydb==4.8.0
 
-# Code quality (for reviewer)
+# Code quality 
 ruff>=0.1.14
 pytest>=7.4.4

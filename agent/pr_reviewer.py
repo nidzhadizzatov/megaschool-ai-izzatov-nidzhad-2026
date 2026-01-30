@@ -44,7 +44,11 @@ def review_file_for_issue(file_content: str, file_path: str, issue_description: 
 """
     
     try:
-        response = ai_client.analyze_file(prompt, expect_json=True)
+        response = ai_client._call([{"role": "user", "content": prompt}], temperature=0.2)
+        response = response.strip()
+        if response.startswith("```"):
+            response = response.split("\n", 1)[1]
+            response = response.rsplit("```", 1)[0]
         
         # Парсим JSON ответ
         if isinstance(response, str):

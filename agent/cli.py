@@ -1,10 +1,7 @@
-#!/usr/bin/env python3
-"""CLI инструмент для Coding Agent - соответствует требованиям ТЗ"""
 import sys
 import argparse
 from pathlib import Path
 
-# Добавляем текущую директорию в path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from issue_solver import IssueSolver

@@ -97,6 +97,25 @@ def get_element_safe(lst: list, index: int) -> any:
     return None
 
 
+def factorial(n: int) -> int:
+    """Вычисляет факториал числа.
+    
+    Args:
+        n: Целое число
+    
+    Returns:
+        Факториал числа
+    """
+    if n < 0:
+        raise ValueError("n должно быть неотрицательным")
+    if n == 0:
+        return 1
+    result = 1
+    for i in range(1, n + 1):
+        result *= i
+    return result
+
+
 def fibonacci(n: int) -> int:
     """Вычисляет n-ое число Фибоначчи.
     

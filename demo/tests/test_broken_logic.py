@@ -10,7 +10,8 @@ from broken_logic import (
     process_data,
     divide_numbers,
     get_element_safe,
-    fibonacci
+    fibonacci,
+    factorial
 )
 
 
@@ -132,3 +133,21 @@ class TestFibonacci:
         # Исправлено: добавлено исключение для отрицательных чисел
         with pytest.raises(ValueError):
             fibonacci(-1)
+
+
+class TestFactorial:
+    """Тесты для factorial"""
+    
+    def test_factorial_of_zero(self):
+        """Факториал 0 должен быть 1"""
+        assert factorial(0) == 1
+    
+    def test_factorial_of_positive(self):
+        """Факториал положительного числа"""
+        assert factorial(5) == 120
+        assert factorial(3) == 6
+    
+    def test_factorial_of_negative(self):
+        """Факториал отрицательного числа - должно выбрасывать ValueError"""
+        with pytest.raises(ValueError):
+            factorial(-1)

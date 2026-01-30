@@ -117,8 +117,21 @@ class AIClient:
             ".ts": "typescript",
             ".jsx": "jsx",
             ".tsx": "tsx",
+            ".cpp": "cpp",
+            ".cc": "cpp",
+            ".cxx": "cpp",
+            ".c": "c",
+            ".h": "c",
+            ".hpp": "cpp",
+            ".java": "java",
+            ".go": "go",
+            ".rs": "rust",
+            ".rb": "ruby",
+            ".php": "php",
+            ".swift": "swift",
+            ".kt": "kotlin",
         }
-        return ext_map.get(filepath.suffix, "")
+        return ext_map.get(filepath.suffix, filepath.suffix.lstrip("."))
     
     def analyze_file(
         self,

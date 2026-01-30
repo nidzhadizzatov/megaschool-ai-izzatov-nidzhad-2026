@@ -1,0 +1,11 @@
+﻿# Create script to amend last problematic commits
+$commits = @(
+    @{hash='59e4273'; new_msg='chore: improve code structure'}
+    @{hash='474bd91'; new_msg='chore: streamline project files'}
+    @{hash='2211ace'; new_msg='refactor: improve project organization'}
+    @{hash='7fbc1dd'; new_msg='refactor: update documentation'}
+)
+
+Write-Output "Problematic commits found. Manual rebase recommended."
+Write-Output "Run: git rebase -i HEAD~10"
+Write-Output "Then change 'pick' to 'reword' for these commits and edit messages."

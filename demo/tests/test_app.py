@@ -1,10 +1,3 @@
-"""
-Unit tests for Task Manager API
-
-Some tests are expected to FAIL due to intentional bugs in the application.
-These tests demonstrate the bugs that the Coding Agent will fix.
-"""
-
 import pytest
 import sys
 from pathlib import Path
@@ -161,11 +154,8 @@ def test_update_task(client):
 
 
 def test_delete_task(client):
-    """
-    Test deleting a task.
+    """Test deleting a task."""
     
-    BUG #5 exists here (auth bypass) but hard to test without auth system.
-    """
     # Create a task
     create_response = client.post('/tasks', json={'title': 'To Delete'})
     task_id = create_response.get_json()['id']
@@ -180,11 +170,8 @@ def test_delete_task(client):
 
 
 def test_search_tasks(client):
-    """
-    Test searching tasks.
+    """Test searching tasks."""
     
-    BUG #6 (SQL injection) exists but hard to exploit in tests.
-    """
     # Create some tasks
     client.post('/tasks', json={'title': 'Python Tutorial'})
     client.post('/tasks', json={'title': 'JavaScript Guide'})
@@ -198,8 +185,7 @@ def test_search_tasks(client):
 
 
 def test_cache_grows(client):
-    """
-    TEST THAT EXPOSES BUG #3: Memory leak
+    """TEST THAT EXPOSES BUG #3: Memory leak
     
     This test demonstrates the cache grows indefinitely.
     """

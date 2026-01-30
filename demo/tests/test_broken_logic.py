@@ -23,10 +23,10 @@ class TestCalculateAverage:
         assert result == 20.0
     
     def test_empty_list(self):
-        """Тест с пустым списком - ПАДАЕТ из-за бага!"""
-        # BUG: Должен вернуть 0 или выбросить понятное исключение
-        with pytest.raises(ZeroDivisionError):
-            calculate_average([])
+        """Тест с пустым списком - должен возвращать 0"""
+        # Исправлено: теперь возвращает 0 вместо ошибки
+        result = calculate_average([])
+        assert result == 0
     
     def test_single_element(self):
         """Тест с одним элементом"""
@@ -48,10 +48,9 @@ class TestFindItem:
         assert result == 1
     
     def test_find_last(self):
-        """Поиск последнего элемента - ПАДАЕТ из-за off-by-one!"""
+        """Поиск последнего элемента - работает"""
         result = find_item(["a", "b", "c"], "c")
-        # BUG: Возвращает -1 вместо 2 из-за range(len-1)
-        assert result == 2  # Этот тест упадёт!
+        assert result == 2  # Исправлено: теперь возвращает 2
     
     def test_not_found(self):
         """Элемент не найден"""
@@ -63,7 +62,7 @@ class TestProcessData:
     """Тесты для process_data"""
     
     def test_complete_data(self):
-        """Полные данные - ПАДАЕТ из-за отсутствия status!"""
+        """Полные данные - работает"""
         data = {"name": "test", "value": 10, "status": "active"}
         result = process_data(data)
         assert result["name"] == "TEST"

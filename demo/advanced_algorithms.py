@@ -6,8 +6,6 @@ Contains intentional bugs in complex algorithms
 def longest_common_subsequence(s1: str, s2: str) -> int:
     """
     Find length of longest common subsequence using dynamic programming.
-    
-    Bug: Wrong DP recurrence relation
     """
     n, m = len(s1), len(s2)
     dp = [[0] * (m + 1) for _ in range(n + 1)]
@@ -17,30 +15,25 @@ def longest_common_subsequence(s1: str, s2: str) -> int:
             if s1[i - 1] == s2[j - 1]:
                 dp[i][j] = dp[i - 1][j - 1] + 1
             else:
-                # BUG: Should be max(dp[i-1][j], dp[i][j-1])
-                dp[i][j] = dp[i - 1][j - 1]  # Wrong!
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])  # Fixed!
     
     return dp[n][m]
-
 
 def dijkstra_shortest_path(graph: dict[int, list[tuple[int, int]]], start: int, end: int) -> int:
     """
     Dijkstra's algorithm for shortest path in weighted graph.
-    
-    Bug: Using regular queue instead of priority queue
     """
     import sys
-    from collections import deque
+    import heapq  # Changed import to heapq
     
     distances = {node: sys.maxsize for node in graph}
     distances[start] = 0
     
-    # BUG: Should use heapq (priority queue), not deque (FIFO)
-    queue = deque([start])
+    queue = [(0, start)]  # Changed to use a priority queue
     visited = set()
     
     while queue:
-        current = queue.popleft()  # Wrong: not extracting min!
+        current_distance, current = heapq.heappop(queue)  # Fixed: extracting min!
         
         if current in visited:
             continue
@@ -53,51 +46,47 @@ def dijkstra_shortest_path(graph: dict[int, list[tuple[int, int]]], start: int, 
             distance = distances[current] + weight
             if distance < distances[neighbor]:
                 distances[neighbor] = distance
-                queue.append(neighbor)
+                heapq.heappush(queue, (distance, neighbor))  # Fixed: push to priority queue
     
     return distances[end] if distances[end] != sys.maxsize else -1
-
 
 def knapsack_01(weights: list[int], values: list[int], capacity: int) -> int:
     """
     0/1 Knapsack problem using dynamic programming.
-    
-    Bug: Wrong dimension initialization
     """
     n = len(weights)
-    # BUG: Should be dp[n+1][capacity+1], wrong dimension order
-    dp = [[0] * (n + 1) for _ in range(capacity + 1)]
+    dp = [[0] * (capacity + 1) for _ in range(n + 1)]  # Fixed: correct dimensions
     
     for i in range(1, n + 1):
         for w in range(1, capacity + 1):
             if weights[i - 1] <= w:
-                # BUG: Indices swapped (should be dp[i-1][w])
-                dp[w][i] = max(
-                    values[i - 1] + dp[w - weights[i - 1]][i - 1],
-                    dp[w][i - 1]
+                dp[i][w] = max(
+                    values[i - 1] + dp[i - 1][w - weights[i - 1]],  # Fixed: correct indices
+                    dp[i - 1][w]
                 )
             else:
-                dp[w][i] = dp[w][i - 1]
+                dp[i][w] = dp[i - 1][w]
     
-    return dp[capacity][n]
-
+    return dp[n][capacity]
 
 def topological_sort(graph: dict[int, list[int]]) -> list[int]:
     """
     Topological sort using DFS (Kahn's algorithm variant).
-    
-    Bug: Missing cycle detection
     """
     visited = set()
     stack = []
+    recursion_stack = set()  # Added for cycle detection
     
     def dfs(node):
-        # BUG: No cycle detection - will infinite loop on cyclic graphs!
+        if node in recursion_stack:  # Cycle detection
+            raise ValueError("Graph is cyclic")
+        recursion_stack.add(node)
         visited.add(node)
         for neighbor in graph.get(node, []):
             if neighbor not in visited:
                 dfs(neighbor)
         stack.append(node)
+        recursion_stack.remove(node)  # Remove from recursion stack
     
     for node in graph:
         if node not in visited:

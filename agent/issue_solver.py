@@ -35,13 +35,15 @@ class IssueSolver:
         """
         mentioned = set()
         
-        # Паттерны для поиска файлов
+        # Паттерны для поиска файлов (любые расширения)
+        # Поддержка: Python, JS/TS, C/C++, Java, Go, Rust, и др.
+        file_ext = r'[a-zA-Z0-9]+'  # Любое расширение
         patterns = [
-            r'`([^`]+\.py)`',                    # В backticks
-            r'([a-zA-Z0-9_/.-]+\.py):\d+',       # С номером строки (file.py:123)
-            r'([a-zA-Z0-9_/.-]+\.py)\s+line',    # "file.py line 123"
-            r'in\s+([a-zA-Z0-9_/.-]+\.py)',      # "in file.py"
-            r'([a-zA-Z0-9_/.-]+\.py)',           # Просто путь к файлу
+            rf'`([^`]+\.{file_ext})`',                    # В backticks
+            rf'([a-zA-Z0-9_/.-]+\.{file_ext}):\d+',       # С номером строки (file.ext:123)
+            rf'([a-zA-Z0-9_/.-]+\.{file_ext})\s+line',    # "file.ext line 123"
+            rf'in\s+([a-zA-Z0-9_/.-]+\.{file_ext})',      # "in file.ext"
+            rf'([a-zA-Z0-9_/.-]+\.{file_ext})',           # Просто путь к файлу
         ]
         
         for pattern in patterns:

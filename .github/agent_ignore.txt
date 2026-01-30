@@ -48,6 +48,9 @@ logs/
 
 # Tests (agent shouldn't modify tests without explicit request)
 # tests/
+
+# Agent code (NEVER modify agent's own code!)
+agent/
 # *_test.py
 # test_*.py
 

@@ -114,4 +114,10 @@ def fibonacci(n: int) -> int:
         raise ValueError("n должно быть неотрицательным")
     if n <= 1:
         return n
-    return fibonacci(n - 1) + fibonacci(n - 2)
+    # FIX: Используем мемоизацию для повышения производительности
+    memo = {0: 0, 1: 1}
+    def fib_helper(n):
+        if n not in memo:
+            memo[n] = fib_helper(n - 1) + fib_helper(n - 2)
+        return memo[n]
+    return fib_helper(n)

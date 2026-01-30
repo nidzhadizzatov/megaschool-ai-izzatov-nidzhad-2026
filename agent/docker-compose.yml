@@ -13,7 +13,7 @@ services:
       # OpenAI
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://api.openai.com/v1}
-      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-3.5-turbo}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
       
       # GitHub
       GITHUB_APP_ID: ${GITHUB_APP_ID}
@@ -40,6 +40,7 @@ services:
       - agent_data:/app/data
       - agent_repos:/app/repos
       - ../megaschool-coding-agent.2026-01-29.private-key.pem:/app/megaschool-coding-agent.2026-01-29.private-key.pem:ro
+    command: ["/usr/bin/supervisord", "-c", "/app/supervisord.conf"]
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/"]
       interval: 30s

@@ -89,7 +89,19 @@ class RepoManager:
     def get_files(self, extensions: list[str] = None) -> list[Path]:
         """Получает список файлов в репо с учётом .github/agent_ignore.txt."""
         if extensions is None:
-            extensions = [".py", ".js", ".ts", ".jsx", ".tsx"]
+            # Поддержка популярных языков программирования
+            extensions = [
+                ".py",   # Python
+                ".js", ".ts", ".jsx", ".tsx",  # JavaScript/TypeScript
+                ".cpp", ".cc", ".cxx", ".c", ".h", ".hpp",  # C/C++
+                ".java",  # Java
+                ".go",    # Go
+                ".rs",    # Rust
+                ".rb",    # Ruby
+                ".php",   # PHP
+                ".swift", # Swift
+                ".kt",    # Kotlin
+            ]
         
         # Загружаем ignore patterns из .github/agent_ignore.txt
         ignore_patterns = self._load_agent_ignore()

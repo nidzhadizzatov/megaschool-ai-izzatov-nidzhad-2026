@@ -10,15 +10,15 @@ using namespace std;
 
 int binarySearch(vector<int>& arr, int target) {
     int left = 0;
-    int right = arr.size();
+    int right = arr.size() - 1;  // Fixed: Last valid index
     
-    while (left < right) {
+    while (left <= right) {  // Fixed: Change condition to <=
         int mid = (left + right) / 2;
         
         if (arr[mid] < target) {
             left = mid + 1;
         } else {
-            right = mid;
+            right = mid - 1;  // Fixed: Adjust right for correct search
         }
     }
     
@@ -36,8 +36,8 @@ vector<int> buildPrefixSum(vector<int>& arr) {
     int n = arr.size();
     vector<int> prefix(n + 1, 0);
     
-    for (int i = 0; i <= n; i++) {
-        prefix[i] = prefix[i - 1] + arr[i];
+    for (int i = 1; i <= n; i++) {  // Fixed: Start loop from 1
+        prefix[i] = prefix[i - 1] + arr[i - 1];  // Fixed: Access arr[i - 1]
     }
     
     return prefix;

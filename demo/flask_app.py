@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 # Configuration
 DATABASE = 'tasks.db'
-CACHE = {}  # TODO: implement cache eviction policy
+CACHE = {}
 
 def get_db():
     """Get database connection."""
@@ -189,7 +189,6 @@ def update_task(task_id):
 @app.route('/tasks/<int:task_id>', methods=['DELETE'])
 def delete_task(task_id):
     """Delete a task."""
-    # TODO: add authentication check
     db = get_db()
     cursor = db.execute('DELETE FROM tasks WHERE id = ?', (task_id,))
     db.commit()

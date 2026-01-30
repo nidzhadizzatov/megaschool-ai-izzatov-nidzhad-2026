@@ -29,6 +29,7 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
+
 def init_db():
     """Initialize the database."""
     with app.app_context():
@@ -80,7 +81,11 @@ def get_stats():
     cursor = db.execute('SELECT COUNT(*) as done FROM tasks WHERE done = 1')
     done = cursor.fetchone()['done']
     
-    completion_rate = (done / total) * 100
+    # Check for division by zero
+    if total == 0:
+        completion_rate = 0
+    else:
+        completion_rate = (done / total) * 100
     
     return jsonify({
         'total': total,
@@ -178,7 +183,7 @@ def update_task(task_id):
     params.append(task_id)
     
     db.execute(
-        f'UPDATE tasks SET {", ".join(updates)} WHERE id = ?',
+        f'UPDATE tasks SET {', '.join(updates)} WHERE id = ?',
         params
     )
     db.commit()

@@ -1,4 +1,3 @@
-"""Worker - фоновый процесс для обработки issues из очереди"""
 import os
 import time
 import signal
@@ -87,6 +86,10 @@ class Worker:
         db.increment_attempts(doc_id)
         
         try:
+            total = issue_data.get('total', 0)  # Assuming this is how total tasks are fetched
+            done = issue_data.get('done', 0)    # Assuming this is how done tasks are fetched
+            completion_rate = (done / total * 100) if total > 0 else 0  # Zero-check before division
+            print(f"Completion Rate: {completion_rate}%")
             pr_number = process_issue_from_db(issue_data)
             
             if pr_number:

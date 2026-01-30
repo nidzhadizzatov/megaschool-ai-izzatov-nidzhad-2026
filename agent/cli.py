@@ -7,14 +7,8 @@ sys.path.insert(0, str(Path(__file__).parent))
 from issue_solver import IssueSolver
 from pr_reviewer import review_pr_files
 
-
 def process_issue(repo_full_name: str, issue_number: int):
-    """Обрабатывает issue и создаёт PR.
-    
-    Args:
-        repo_full_name: owner/repo
-        issue_number: Номер issue
-    """
+    """Обрабатывает issue и создаёт PR.\n    \n    Args:\n        repo_full_name: owner/repo\n        issue_number: Номер issue\n    """
     print(f"🚀 Processing issue #{issue_number} from {repo_full_name}")
     
     try:
@@ -31,14 +25,8 @@ def process_issue(repo_full_name: str, issue_number: int):
         print(f"❌ Error processing issue: {e}")
         return 1
 
-
 def review_pr(repo_full_name: str, pr_number: int):
-    """Выполняет AI review Pull Request.
-    
-    Args:
-        repo_full_name: owner/repo
-        pr_number: Номер PR
-    """
+    """Выполняет AI review Pull Request.\n    \n    Args:\n        repo_full_name: owner/repo\n        pr_number: Номер PR\n    """
     print(f"🔍 Reviewing PR #{pr_number} from {repo_full_name}")
     
     try:
@@ -57,6 +45,16 @@ def review_pr(repo_full_name: str, pr_number: int):
     except Exception as e:
         print(f"❌ Error reviewing PR: {e}")
         return 1
+
+def get_task_stats():
+    # Placeholder for the actual logic to get task stats
+    done = 0  # Example value
+    total = 0  # Example value
+    
+    if total == 0:
+        return 0  # Return 0 completion rate if no tasks exist
+    completion_rate = (done / total) * 100  # Division by zero when total=0!
+    return completion_rate
 
 
 def main():

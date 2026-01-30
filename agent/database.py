@@ -163,6 +163,28 @@ class IssueDB:
             "pr_approved": len(self.pr_reviews.search(Review.status == PRReviewStatus.APPROVED)),
             "pr_rejected": len(self.pr_reviews.search(Review.status == PRReviewStatus.REJECTED))
         }
+
+    def get_pr_by_number(self, repo_full_name: str, pr_number: int) -> dict | None:
+        """Получить PR review по номеру."""
+        Review = Query()
+        results = self.pr_reviews.search(
+            (Review.repo == repo_full_name) & (Review.pr_number == pr_number)
+        )
+        if results:
+            results[0]['doc_id'] = results[0].doc_id
+            return results[0]
+        return None
+
+    def update_pr_status(self, doc_id: int, status: PRReviewStatus, attempts: int = None):
+        """Обновить статус PR review."""
+        update_data = {
+            "status": status,
+            "updated_at": datetime.now().isoformat()
+        }
+        if attempts is not None:
+            update_data["attempts"] = attempts
+        
+        self.pr_reviews.update(update_data, doc_ids=[doc_id])
     
     # ==================== PR Review Methods ====================
     
@@ -185,7 +207,7 @@ class IssueDB:
             doc_id записи
         """
         Review = Query()
-        # Проверяем, не существует ли уже
+        # проверяем, не существует ли уже
         existing = self.pr_reviews.search(
             (Review.repo == repo_full_name) & 
             (Review.pr_number == pr_number) &
@@ -200,7 +222,7 @@ class IssueDB:
             "changed_files": changed_files,
             "installation_id": installation_id,
             "status": PRReviewStatus.PENDING,
-            "attempts": 0,
+            "at": 0,
             "error": None,
             "review_results": [],  # [{file, issue_solved, notes}]
             "created_at": datetime.now().isoformat(),
@@ -213,7 +235,7 @@ class IssueDB:
         Review = Query()
         results = self.pr_reviews.search(Review.status == PRReviewStatus.PENDING)
         for r in results:
-            r['doc_id'] = r.doc_id
+            r['doc_id'] = r.doc
         return results[:limit]
     
     def get_pr_review_by_id(self, doc_id: int) -> dict | None:

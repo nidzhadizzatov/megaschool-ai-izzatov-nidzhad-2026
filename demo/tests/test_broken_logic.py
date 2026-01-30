@@ -25,8 +25,8 @@ class TestCalculateAverage:
     def test_empty_list(self):
         """Тест с пустым списком - ПАДАЕТ из-за бага!"""
         # BUG: Должен вернуть 0 или выбросить понятное исключение
-        with pytest.raises(ZeroDivisionError):
-            calculate_average([])
+        result = calculate_average([])
+        assert result == 0  # Исправлено: теперь возвращает 0
     
     def test_single_element(self):
         """Тест с одним элементом"""
@@ -48,10 +48,9 @@ class TestFindItem:
         assert result == 1
     
     def test_find_last(self):
-        """Поиск последнего элемента - ПАДАЕТ из-за off-by-one!"""
+        """Поиск последнего элемента - работает"""
         result = find_item(["a", "b", "c"], "c")
-        # BUG: Возвращает -1 вместо 2 из-за range(len-1)
-        assert result == 2  # Этот тест упадёт!
+        assert result == 2  # Исправлено: теперь возвращает 2
     
     def test_not_found(self):
         """Элемент не найден"""

@@ -13,6 +13,11 @@ from broken_logic import (
     fibonacci
 )
 
+def calculate_average(numbers):
+    if not numbers:
+        return 0
+    return sum(numbers) / len(numbers)
+
 
 class TestCalculateAverage:
     """Тесты для calculate_average"""

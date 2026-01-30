@@ -1,26 +1,26 @@
-#include <vector>
+def factorial(n):
+    if n < 0:
+        raise ValueError("Input must be a non-negative integer")
+    if n == 0:
+        return 1
+    result = 1
+    for i in range(1, n + 1):
+        result *= i
+    return result
 
-void buildPrefixSum(const std::vector<int>& arr, std::vector<int>& prefix) {
-    int n = arr.size();
-    prefix.resize(n + 1);
-    prefix[0] = 0;  // Initialize prefix[0]
-    for (int i = 1; i <= n; i++) {
-        prefix[i] = prefix[i - 1] + arr[i - 1];
-    }
-}
 
-int binarySearch(const std::vector<int>& arr, int target) {
-    int left = 0;
-    int right = arr.size() - 1;  // Corrected to last valid index
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        if (arr[mid] == target) {
-            return mid;
-        } else if (arr[mid] < target) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
-    }
-    return -1;  // Target not found
-}
+def test_factorial():
+    assert factorial(0) == 1
+    assert factorial(1) == 1
+    assert factorial(5) == 120
+    try:
+        factorial(-1)
+    except ValueError:
+        pass  # Expected behavior
+    else:
+        assert False, "ValueError not raised"
+
+    assert factorial(3) == 6
+
+
+test_factorial()

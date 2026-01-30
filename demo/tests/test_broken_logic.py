@@ -100,11 +100,10 @@ class TestGetElementSafe:
         assert result == 2
     
     def test_negative_index(self):
-        """Отрицательный индекс - НЕБЕЗОПАСНО!"""
-        # BUG: Функция не проверяет отрицательные индексы
+        """Отрицательный индекс - БЕЗОПАСНО!"""
+        # Исправлено: добавлена проверка на отрицательные индексы
         result = get_element_safe([1, 2, 3], -1)
-        # Это работает из-за Python, но это не "безопасное" поведение
-        assert result == 3  # Неожиданное поведение!
+        assert result is None  # Теперь возвращает None вместо неожиданного поведения
     
     def test_out_of_bounds(self):
         """Индекс за пределами"""
@@ -130,7 +129,6 @@ class TestFibonacci:
     
     def test_negative(self):
         """Отрицательное число - BUG: бесконечная рекурсия!"""
-        # Этот тест закомментирован, т.к. вызовет RecursionError
-        # with pytest.raises(ValueError):
-        #     fibonacci(-1)
-        pass
+        # Исправлено: добавлено исключение для отрицательных чисел
+        with pytest.raises(ValueError):
+            fibonacci(-1)

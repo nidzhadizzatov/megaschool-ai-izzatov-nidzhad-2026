@@ -1,6 +1,7 @@
 package main
 
 import (
+	"sort"
 	"strings"
 	"time"
 )
@@ -23,25 +24,34 @@ func SlowSort(data []int) []int {
 
 // OptimizedSort is the optimized version
 func OptimizedSort(data []int) []int {
-	return SlowSort(data)
+	sort.Ints(data)
+	return data
 }
 
 // InefficientStringBuilder builds a string by concatenating
 func InefficientStringBuilder(parts []string, repeatCount int) string {
-	result := ""
+	var builder strings.Builder
 
 	for i := 0; i < repeatCount; i++ {
 		for _, part := range parts {
-			result += part
+			builder.WriteString(part)
 		}
 	}
 
-	return result
+	return builder.String()
 }
 
 // OptimizedStringBuilder is the optimized version
 func OptimizedStringBuilder(parts []string, repeatCount int) string {
-	return InefficientStringBuilder(parts, repeatCount)
+	var builder strings.Builder
+
+	for i := 0; i < repeatCount; i++ {
+		for _, part := range parts {
+			builder.WriteString(part)
+		}
+	}
+
+	return builder.String()
 }
 
 // ExpensiveCalculation computes the sum of fibonacci numbers up to n
@@ -68,7 +78,19 @@ func fibonacci(n int) int {
 
 // OptimizedCalculation is the optimized version
 func OptimizedCalculation(n int) int {
-	return ExpensiveCalculation(n)
+	memo := make(map[int]int)
+	return optimizedFibonacci(n, memo)
+}
+
+func optimizedFibonacci(n int, memo map[int]int) int {
+	if n <= 1 {
+		return n
+	}
+	if val, exists := memo[n]; exists {
+		return val
+	}
+	memo[n] = optimizedFibonacci(n-1, memo) + optimizedFibonacci(n-2, memo)
+	return memo[n]
 }
 
 // HighAllocationSearch searches for all occurrences of a substring
@@ -78,13 +100,9 @@ func HighAllocationSearch(text, substr string) map[int]string {
 	lowerText := strings.ToLower(text)
 	lowerSubstr := strings.ToLower(substr)
 
-	for i := 0; i < len(lowerText); i++ {
-		if i+len(lowerSubstr) <= len(lowerText) {
-			potentialMatch := lowerText[i : i+len(lowerSubstr)]
-
-			if potentialMatch == lowerSubstr {
-				result[i] = text[i : i+len(substr)]
-			}
+	for i := 0; i <= len(lowerText)-len(lowerSubstr); i++ {
+		if lowerText[i:i+len(lowerSubstr)] == lowerSubstr {
+			result[i] = text[i : i+len(substr)]
 		}
 	}
 

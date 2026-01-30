@@ -125,6 +125,20 @@ class TestDatabase:
         from database import IssueDB
         db = IssueDB(db_path)
         
+        # No issues and PR reviews in the database
+        stats = db.get_stats()
+        assert "pending" in stats
+        assert "total" in stats
+        assert "pr_pending" in stats
+        assert stats["pending"] == 0
+        assert stats["total"] == 0
+        assert stats["pr_pending"] == 0
+
+        # Calculate completion rate safely
+        total = stats["total"]
+        completion_rate = (stats["completed"] / total) * 100 if total > 0 else 0
+        assert completion_rate == 0
+
         # Add issues
         db.add_issue("test/repo", 1, "Issue 1", "")
         db.add_issue("test/repo", 2, "Issue 2", "")

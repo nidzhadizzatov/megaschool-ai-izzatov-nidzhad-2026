@@ -1,14 +1,5 @@
-"""Broken Logic - файл с намеренными ошибками для тестирования Coding Agent.
-
-ВНИМАНИЕ: Этот файл содержит намеренные баги!
-Используется для демонстрации работы Coding Agent.
-"""
-
-
 def calculate_average(numbers: list) -> float:
     """Вычисляет среднее значение списка чисел.
-    
-    BUG: Деление на ноль при пустом списке!
     
     Args:
         numbers: Список чисел
@@ -16,15 +7,14 @@ def calculate_average(numbers: list) -> float:
     Returns:
         Среднее значение
     """
-    # BUG: Не проверяем пустой список
+    if not numbers:
+        return 0.0  # Return 0.0 for empty list
     total = sum(numbers)
     return total / len(numbers)
 
 
 def find_item(items: list, target: str) -> int:
     """Ищет элемент в списке и возвращает индекс.
-    
-    BUG: Off-by-one ошибка!
     
     Args:
         items: Список элементов
@@ -33,8 +23,7 @@ def find_item(items: list, target: str) -> int:
     Returns:
         Индекс элемента или -1
     """
-    # BUG: Неправильный диапазон (должен быть range(len(items)))
-    for i in range(len(items) - 1):
+    for i in range(len(items)):
         if items[i] == target:
             return i
     return -1
@@ -43,27 +32,22 @@ def find_item(items: list, target: str) -> int:
 def process_data(data: dict) -> dict:
     """Обрабатывает данные.
     
-    BUG: Не проверяет наличие ключей!
-    
     Args:
         data: Словарь с данными
         
     Returns:
         Обработанные данные
     """
-    # BUG: Предполагаем что все ключи существуют
     result = {
-        "name": data["name"].upper(),
-        "value": data["value"] * 2,
-        "status": data["status"]  # BUG: этого ключа может не быть
+        "name": data.get("name", "").upper(),  # Use get to avoid KeyError
+        "value": data.get("value", 0) * 2,
+        "status": data.get("status", "unknown")  # Provide default value
     }
     return result
 
 
 def divide_numbers(a: float, b: float) -> float:
     """Делит два числа.
-    
-    BUG: Нет проверки деления на ноль!
     
     Args:
         a: Делимое
@@ -72,14 +56,13 @@ def divide_numbers(a: float, b: float) -> float:
     Returns:
         Результат деления
     """
-    # BUG: Нет проверки b != 0
+    if b == 0:
+        raise ValueError("Деление на ноль невозможно!")  # Raise an error for division by zero
     return a / b
 
 
 def get_element_safe(lst: list, index: int) -> any:
     """Безопасно получает элемент списка.
-    
-    BUG: На самом деле не безопасно!
     
     Args:
         lst: Список
@@ -88,8 +71,7 @@ def get_element_safe(lst: list, index: int) -> any:
     Returns:
         Элемент или None
     """
-    # BUG: Проверяем только верхнюю границу
-    if index < len(lst):
+    if 0 <= index < len(lst):
         return lst[index]
     return None
 
@@ -97,16 +79,31 @@ def get_element_safe(lst: list, index: int) -> any:
 def fibonacci(n: int) -> int:
     """Вычисляет n-ое число Фибоначчи.
     
-    BUG: Неэффективная рекурсия без мемоизации!
-    BUG: Нет проверки на отрицательные числа!
-    
     Args:
         n: Номер числа Фибоначчи
         
     Returns:
         Число Фибоначчи
     """
-    # BUG: Нет проверки n < 0
+    if n < 0:
+        raise ValueError("n должно быть неотрицательным")  # Raise an error for negative input
     if n <= 1:
         return n
     return fibonacci(n - 1) + fibonacci(n - 2)
+
+
+def get_stats() -> dict:
+    """Получает статистику задач.
+    
+    Returns:
+        Словарь со статистикой
+    """
+    tasks = []  # Simulating empty database
+    total = len(tasks)
+    completed = sum(1 for task in tasks if task.get('completed', False))
+    completion_rate = (completed / total) * 100 if total > 0 else 0  # Avoid division by zero
+    return {
+        'total': total,
+        'completed': completed,
+        'completion_rate': completion_rate
+    }

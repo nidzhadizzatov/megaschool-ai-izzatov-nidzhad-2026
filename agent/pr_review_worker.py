@@ -30,7 +30,7 @@ class PRReviewWorker:
         signal.signal(signal.SIGINT, self._handle_shutdown)
         signal.signal(signal.SIGTERM, self._handle_shutdown)
         
-        print(f"🤖 PR Review Worker started (interval: {WORKER_INTERVAL}s)")
+        print(f"PR Review Worker started (interval: {WORKER_INTERVAL}s)")
         print(f"   Max attempts per PR: {MAX_ATTEMPTS}")
         print("   Ctrl+C to stop gracefully\n")
         

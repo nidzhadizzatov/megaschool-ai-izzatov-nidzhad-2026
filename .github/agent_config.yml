@@ -1,12 +1,12 @@
 # Coding Agent Configuration
-# This file configures the GitHub Copilot Coding Agent for this repository
+# This file configures the GitHub Coding Agent for this repository
 
 version: 1
 
 # Agent settings
 agent:
   name: "Coding Agent"
-  description: "Автономный AI-агент для решения GitHub Issues"
+  description: "Automated code analysis and issue resolution system"
   
 # Permissions
 permissions:

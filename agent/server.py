@@ -238,13 +238,45 @@ async def manual_process(repo_owner: str, repo_name: str, issue_number: int):
         repo_full_name=repo_full_name,
         issue_number=issue_number,
         title=f"Manual trigger #{issue_number}",
-        body=""
+        body="",
+        installation_id=None # Worker должен будет сам найти
     )
     
     return IssueResponse(
         status="queued",
         doc_id=doc_id,
         message=f"Issue #{issue_number} queued for processing"
+    )
+
+
+@app.post("/review/{repo_owner}/{repo_name}/{pr_number}")
+async def manual_review(repo_owner: str, repo_name: str, pr_number: int):
+    """Ручной запуск review PR (для тестирования)"""
+    repo_full_name = f"{repo_owner}/{repo_name}"
+    
+    # Проверяем существующий PR
+    existing = db.get_pr_by_number(repo_full_name, pr_number)
+    if existing:
+        # Сбрасываем в pending для повторного review
+        db.update_pr_status(existing['doc_id'], PRReviewStatus.PENDING, attempts=0)
+        return IssueResponse(
+            status="requeued",
+            doc_id=existing['doc_id'],
+            message=f"PR #{pr_number} requeued for review"
+        )
+    
+    # Добавляем новый PR для review
+    doc_id = db.add_pr_review(
+        repo_full_name=repo_full_name,
+        pr_number=pr_number,
+        changed_files=[],  # Worker получит из GitHub API
+        installation_id=None
+    )
+    
+    return IssueResponse(
+        status="queued",
+        doc_id=doc_id,
+        message=f"PR #{pr_number} queued for review"
     )
 
 

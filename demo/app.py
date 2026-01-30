@@ -1,7 +1,15 @@
+def calculate_average(numbers):
+    """Calculate the average of a list of numbers."""
+    if not numbers:
+        return 0
+    return sum(numbers) / len(numbers)
+
+
+# The rest of the file remains unchanged
+
 """Demo Application - точка входа"""
 from utils import greet, format_date
 from broken_logic import calculate_average, find_item, process_data
-
 
 def main():
     """Главная функция демо-приложения"""

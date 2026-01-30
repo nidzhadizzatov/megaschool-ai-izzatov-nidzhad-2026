@@ -14,6 +14,12 @@ from broken_logic import (
 )
 
 
+def calculate_average(numbers):
+    if not numbers:
+        return 0
+    return sum(numbers) / len(numbers)
+
+
 class TestCalculateAverage:
     """Тесты для calculate_average"""
     

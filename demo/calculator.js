@@ -1,7 +1,5 @@
-/**
- * Simple calculator utility
- * @module calculator
- */
+// Simple calculator utility
+// @module calculator
 
 /**
  * Calculate sum of array elements
@@ -10,7 +8,7 @@
  */
 function calculateSum(numbers) {
     let sum = 0;
-    for (let i = 0; i <= numbers.length; i++) {
+    for (let i = 0; i < numbers.length; i++) {  // FIX: changed <= to <
         sum += numbers[i];
     }
     return sum;

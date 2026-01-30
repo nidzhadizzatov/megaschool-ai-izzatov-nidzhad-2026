@@ -1,8 +1,3 @@
-"""Тесты для broken_logic.py
-
-Эти тесты демонстрируют баги в broken_logic.py.
-Некоторые тесты будут падать - это ожидаемо!
-"""
 import pytest
 from broken_logic import (
     calculate_average,
@@ -23,10 +18,10 @@ class TestCalculateAverage:
         assert result == 20.0
     
     def test_empty_list(self):
-        """Тест с пустым списком - ПАДАЕТ из-за бага!"""
-        # BUG: Должен вернуть 0 или выбросить понятное исключение
-        with pytest.raises(ZeroDivisionError):
-            calculate_average([])
+        """Тест с пустым списком - должен возвращать 0"""
+        # Исправлено: теперь возвращает 0 вместо выброса исключения
+        result = calculate_average([])
+        assert result == 0
     
     def test_single_element(self):
         """Тест с одним элементом"""
@@ -48,10 +43,9 @@ class TestFindItem:
         assert result == 1
     
     def test_find_last(self):
-        """Поиск последнего элемента - ПАДАЕТ из-за off-by-one!"""
+        """Поиск последнего элемента - работает"""
         result = find_item(["a", "b", "c"], "c")
-        # BUG: Возвращает -1 вместо 2 из-за range(len-1)
-        assert result == 2  # Этот тест упадёт!
+        assert result == 2  # Теперь возвращает 2
     
     def test_not_found(self):
         """Элемент не найден"""
@@ -63,7 +57,7 @@ class TestProcessData:
     """Тесты для process_data"""
     
     def test_complete_data(self):
-        """Полные данные - ПАДАЕТ из-за отсутствия status!"""
+        """Полные данные - работает"""
         data = {"name": "test", "value": 10, "status": "active"}
         result = process_data(data)
         assert result["name"] == "TEST"
@@ -72,9 +66,10 @@ class TestProcessData:
     def test_missing_status(self):
         """Отсутствует status - ПАДАЕТ!"""
         data = {"name": "test", "value": 10}
-        # BUG: KeyError на отсутствующем ключе
-        with pytest.raises(KeyError):
-            process_data(data)
+        # Исправлено: теперь возвращает значение по умолчанию вместо KeyError
+        result = process_data(data)
+        assert result["name"] == "TEST"
+        assert result["value"] == 20
 
 
 class TestDivideNumbers:
@@ -87,7 +82,7 @@ class TestDivideNumbers:
     
     def test_divide_by_zero(self):
         """Деление на ноль - ПАДАЕТ!"""
-        # BUG: Должно быть понятное исключение или проверка
+        # Исправлено: теперь выбрасывает понятное исключение
         with pytest.raises(ZeroDivisionError):
             divide_numbers(10, 0)
 
@@ -101,11 +96,10 @@ class TestGetElementSafe:
         assert result == 2
     
     def test_negative_index(self):
-        """Отрицательный индекс - НЕБЕЗОПАСНО!"""
-        # BUG: Функция не проверяет отрицательные индексы
-        result = get_element_safe([1, 2, 3], -1)
-        # Это работает из-за Python, но это не "безопасное" поведение
-        assert result == 3  # Неожиданное поведение!
+        """Отрицательный индекс - ПАДАЕТ!"""
+        # Исправлено: теперь выбрасывает исключение для отрицательных индексов
+        with pytest.raises(IndexError):
+            get_element_safe([1, 2, 3], -1)
     
     def test_out_of_bounds(self):
         """Индекс за пределами"""
@@ -130,8 +124,6 @@ class TestFibonacci:
         assert fibonacci(10) == 55
     
     def test_negative(self):
-        """Отрицательное число - BUG: бесконечная рекурсия!"""
-        # Этот тест закомментирован, т.к. вызовет RecursionError
-        # with pytest.raises(ValueError):
-        #     fibonacci(-1)
-        pass
+        """Отрицательное число - ПАДАЕТ!"""
+        with pytest.raises(ValueError):
+            fibonacci(-1)

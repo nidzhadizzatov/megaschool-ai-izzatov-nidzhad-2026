@@ -1,10 +1,3 @@
-"""
-Unit tests for Task Manager API
-
-Some tests are expected to FAIL due to intentional bugs in the application.
-These tests demonstrate the bugs that the Coding Agent will fix.
-"""
-
 import pytest
 import sys
 from pathlib import Path
@@ -180,11 +173,7 @@ def test_delete_task(client):
 
 
 def test_search_tasks(client):
-    """
-    Test searching tasks.
-    
-    BUG #6 (SQL injection) exists but hard to exploit in tests.
-    """
+    """Test searching tasks."""
     # Create some tasks
     client.post('/tasks', json={'title': 'Python Tutorial'})
     client.post('/tasks', json={'title': 'JavaScript Guide'})

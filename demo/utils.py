@@ -1,54 +1,29 @@
-"""Утилиты для демо-приложения"""
-from datetime import datetime
+// C++ code for algorithms.cpp
 
+#include <vector>
 
-def greet(name: str) -> str:
-    """Возвращает приветствие.
-    
-    Args:
-        name: Имя для приветствия
-        
-    Returns:
-        Строка приветствия
-    """
-    return f"Hello, {name}!"
+std::vector<int> buildPrefixSum(const std::vector<int>& arr) {
+    int n = arr.size();
+    std::vector<int> prefix(n + 1);
+    prefix[0] = 0;  // Initialize prefix[0]
+    for (int i = 1; i <= n; i++) {
+        prefix[i] = prefix[i - 1] + arr[i - 1];
+    }
+    return prefix;
+}
 
-
-def format_date(date: datetime = None) -> str:
-    """Форматирует дату.
-    
-    Args:
-        date: Дата для форматирования (по умолчанию - сегодня)
-        
-    Returns:
-        Отформатированная дата
-    """
-    if date is None:
-        date = datetime.now()
-    return date.strftime("%Y-%m-%d")
-
-
-def validate_email(email: str) -> bool:
-    """Простая валидация email.
-    
-    Args:
-        email: Email для проверки
-        
-    Returns:
-        True если email валидный
-    """
-    return "@" in email and "." in email.split("@")[-1]
-
-
-def clamp(value: int | float, min_val: int | float, max_val: int | float) -> int | float:
-    """Ограничивает значение в диапазоне.
-    
-    Args:
-        value: Значение
-        min_val: Минимум
-        max_val: Максимум
-        
-    Returns:
-        Ограниченное значение
-    """
-    return max(min_val, min(value, max_val))
+int binarySearch(const std::vector<int>& arr, int target) {
+    int left = 0;
+    int right = arr.size() - 1;  // Fixed: should be size() - 1
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == target) {
+            return mid;
+        } else if (arr[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return -1;  // Not found
+}

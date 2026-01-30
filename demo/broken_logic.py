@@ -8,23 +8,21 @@
 def calculate_average(numbers: list) -> float:
     """Вычисляет среднее значение списка чисел.
     
-    BUG: Деление на ноль при пустом списке!
-    
     Args:
         numbers: Список чисел
         
     Returns:
         Среднее значение
     """
-    # BUG: Не проверяем пустой список
+    # Проверка на пустой список
+    if not numbers:
+        return 0.0  # Возвращаем 0.0 или можно выбросить исключение
     total = sum(numbers)
     return total / len(numbers)
 
 
 def find_item(items: list, target: str) -> int:
     """Ищет элемент в списке и возвращает индекс.
-    
-    BUG: Off-by-one ошибка!
     
     Args:
         items: Список элементов
@@ -33,8 +31,8 @@ def find_item(items: list, target: str) -> int:
     Returns:
         Индекс элемента или -1
     """
-    # BUG: Неправильный диапазон (должен быть range(len(items)))
-    for i in range(len(items) - 1):
+    # Исправленный диапазон
+    for i in range(len(items)):
         if items[i] == target:
             return i
     return -1
@@ -43,27 +41,23 @@ def find_item(items: list, target: str) -> int:
 def process_data(data: dict) -> dict:
     """Обрабатывает данные.
     
-    BUG: Не проверяет наличие ключей!
-    
     Args:
         data: Словарь с данными
         
     Returns:
         Обработанные данные
     """
-    # BUG: Предполагаем что все ключи существуют
+    # Проверка наличия ключей
     result = {
-        "name": data["name"].upper(),
-        "value": data["value"] * 2,
-        "status": data["status"]  # BUG: этого ключа может не быть
+        "name": data.get("name", "").upper(),
+        "value": data.get("value", 0) * 2,
+        "status": data.get("status", "unknown")  # Используем значение по умолчанию
     }
     return result
 
 
 def divide_numbers(a: float, b: float) -> float:
     """Делит два числа.
-    
-    BUG: Нет проверки деления на ноль!
     
     Args:
         a: Делимое
@@ -72,14 +66,14 @@ def divide_numbers(a: float, b: float) -> float:
     Returns:
         Результат деления
     """
-    # BUG: Нет проверки b != 0
+    # Проверка деления на ноль
+    if b == 0:
+        raise ValueError("Деление на ноль невозможно!")
     return a / b
 
 
 def get_element_safe(lst: list, index: int) -> any:
     """Безопасно получает элемент списка.
-    
-    BUG: На самом деле не безопасно!
     
     Args:
         lst: Список
@@ -88,8 +82,8 @@ def get_element_safe(lst: list, index: int) -> any:
     Returns:
         Элемент или None
     """
-    # BUG: Проверяем только верхнюю границу
-    if index < len(lst):
+    # Проверяем только верхнюю границу
+    if 0 <= index < len(lst):
         return lst[index]
     return None
 
@@ -97,16 +91,15 @@ def get_element_safe(lst: list, index: int) -> any:
 def fibonacci(n: int) -> int:
     """Вычисляет n-ое число Фибоначчи.
     
-    BUG: Неэффективная рекурсия без мемоизации!
-    BUG: Нет проверки на отрицательные числа!
-    
     Args:
         n: Номер числа Фибоначчи
         
     Returns:
         Число Фибоначчи
     """
-    # BUG: Нет проверки n < 0
+    # Проверка n < 0
+    if n < 0:
+        raise ValueError("n должно быть неотрицательным!")
     if n <= 1:
         return n
     return fibonacci(n - 1) + fibonacci(n - 2)

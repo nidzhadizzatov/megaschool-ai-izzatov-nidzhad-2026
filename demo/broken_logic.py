@@ -16,7 +16,9 @@ def calculate_average(numbers: list) -> float:
     Returns:
         Среднее значение
     """
-    # BUG: Не проверяем пустой список
+    # FIX: Проверка на пустой список
+    if not numbers:
+        return 0.0
     total = sum(numbers)
     return total / len(numbers)
 
@@ -33,8 +35,8 @@ def find_item(items: list, target: str) -> int:
     Returns:
         Индекс элемента или -1
     """
-    # BUG: Неправильный диапазон (должен быть range(len(items)))
-    for i in range(len(items) - 1):
+    # FIX: Правильный диапазон (должен быть range(len(items)))
+    for i in range(len(items)):
         if items[i] == target:
             return i
     return -1
@@ -51,11 +53,11 @@ def process_data(data: dict) -> dict:
     Returns:
         Обработанные данные
     """
-    # BUG: Предполагаем что все ключи существуют
+    # FIX: Проверка наличия ключей
     result = {
-        "name": data["name"].upper(),
-        "value": data["value"] * 2,
-        "status": data["status"]  # BUG: этого ключа может не быть
+        "name": data.get("name", "").upper(),
+        "value": data.get("value", 0) * 2,
+        "status": data.get("status", "unknown")  # FIX: безопасное получение ключа
     }
     return result
 
@@ -72,7 +74,9 @@ def divide_numbers(a: float, b: float) -> float:
     Returns:
         Результат деления
     """
-    # BUG: Нет проверки b != 0
+    # FIX: Проверка b != 0
+    if b == 0:
+        raise ValueError("Деление на ноль невозможно")
     return a / b
 
 
@@ -88,8 +92,8 @@ def get_element_safe(lst: list, index: int) -> any:
     Returns:
         Элемент или None
     """
-    # BUG: Проверяем только верхнюю границу
-    if index < len(lst):
+    # FIX: Проверяем нижнюю и верхнюю границы
+    if 0 <= index < len(lst):
         return lst[index]
     return None
 
@@ -106,7 +110,9 @@ def fibonacci(n: int) -> int:
     Returns:
         Число Фибоначчи
     """
-    # BUG: Нет проверки n < 0
+    # FIX: Проверка n < 0
+    if n < 0:
+        raise ValueError("n должно быть неотрицательным")
     if n <= 1:
         return n
     return fibonacci(n - 1) + fibonacci(n - 2)

@@ -1,7 +1,8 @@
 """Issue Solver - основной модуль для решения GitHub Issues"""
 import os
+import re
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 from dotenv import load_dotenv
 
 from repo_manager import RepoManager
@@ -19,6 +20,79 @@ class IssueSolver:
     def __init__(self, repo_full_name: str):
         self.repo_full_name = repo_full_name
         self.repo = RepoManager(repo_full_name)
+    
+    def extract_mentioned_files(self, issue_text: str) -> List[str]:
+        """Извлекает упоминания файлов из текста Issue.
+        
+        Ищет паттерны типа:
+        - demo/flask_app.py
+        - demo/flask_app.py:83
+        - demo/flask_app.py line 83
+        - `demo/flask_app.py`
+        
+        Returns:
+            Список упомянутых файлов (без дубликатов)
+        """
+        mentioned = set()
+        
+        # Паттерны для поиска файлов
+        patterns = [
+            r'`([^`]+\.py)`',                    # В backticks
+            r'([a-zA-Z0-9_/.-]+\.py):\d+',       # С номером строки (file.py:123)
+            r'([a-zA-Z0-9_/.-]+\.py)\s+line',    # "file.py line 123"
+            r'in\s+([a-zA-Z0-9_/.-]+\.py)',      # "in file.py"
+            r'([a-zA-Z0-9_/.-]+\.py)',           # Просто путь к файлу
+        ]
+        
+        for pattern in patterns:
+            matches = re.findall(pattern, issue_text, re.IGNORECASE)
+            for match in matches:
+                # Нормализуем путь (убираем ./ и т.д.)
+                file_path = match.strip('./')
+                if file_path:
+                    mentioned.add(file_path)
+        
+        return list(mentioned)
+    
+    def prioritize_files(self, files: List[Path], mentioned_files: List[str], repo_path: Path) -> List[Path]:
+        """Сортирует файлы: сначала упомянутые в Issue, потом остальные.
+        
+        Args:
+            files: Список всех файлов
+            mentioned_files: Файлы, упомянутые в Issue
+            repo_path: Путь к репозиторию
+            
+        Returns:
+            Отсортированный список файлов
+        """
+        if not mentioned_files:
+            return files
+        
+        priority_files = []
+        other_files = []
+        
+        for filepath in files:
+            relative_path = str(filepath.relative_to(repo_path))
+            
+            # Проверяем, упомянут ли этот файл
+            is_mentioned = False
+            for mentioned in mentioned_files:
+                # Проверяем как точное совпадение, так и совпадение окончания
+                if relative_path == mentioned or relative_path.endswith(mentioned):
+                    is_mentioned = True
+                    break
+            
+            if is_mentioned:
+                priority_files.append(filepath)
+            else:
+                other_files.append(filepath)
+        
+        if priority_files:
+            print(f"🎯 Prioritizing {len(priority_files)} file(s) mentioned in Issue:")
+            for f in priority_files:
+                print(f"   → {f.relative_to(repo_path)}")
+        
+        return priority_files + other_files
     
     def solve_issue(self, issue_number: int, doc_id: int = None) -> Optional[int]:
         """Обрабатывает один issue.
@@ -58,6 +132,10 @@ class IssueSolver:
             # 3. Получаем файлы
             files = self.repo.get_files()
             print(f"📁 Found {len(files)} files to analyze")
+            
+            # 3.5. Приоритизируем файлы, упомянутые в Issue
+            mentioned_files = self.extract_mentioned_files(issue_description)
+            files = self.prioritize_files(files, mentioned_files, repo_path)
             
             # 4. Анализируем каждый файл с циклом анализ-фикс
             files_fixed = []

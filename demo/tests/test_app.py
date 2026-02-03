@@ -8,6 +8,18 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from app import app, init_db
 
 
+def factorial(n):
+    """Calculate the factorial of a non-negative integer n."""
+    if n < 0:
+        raise ValueError("n must be a non-negative integer")
+    if n == 0:
+        return 1
+    result = 1
+    for i in range(1, n + 1):
+        result *= i
+    return result
+
+
 @pytest.fixture
 def client():
     """Create test client."""
@@ -221,3 +233,13 @@ def test_clear_cache(client):
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])
+
+def test_factorial():
+    """Test the factorial function."""
+    assert factorial(0) == 1
+    assert factorial(1) == 1
+    assert factorial(5) == 120
+    assert factorial(10) == 3628800
+    with pytest.raises(ValueError):
+        factorial(-1)
+        factorial(-5)

@@ -13,6 +13,11 @@ from broken_logic import (
     fibonacci
 )
 
+def calculate_average(numbers):
+    if not numbers:
+        return 0
+    return sum(numbers) / len(numbers)
+
 
 class TestCalculateAverage:
     """Тесты для calculate_average"""
@@ -35,7 +40,7 @@ class TestCalculateAverage:
 
 
 class TestFindItem:
-    """Тесты для find_item"""
+    """Тесты для find_item"""  
     
     def test_find_first(self):
         """Поиск первого элемента - работает"""
@@ -59,7 +64,7 @@ class TestFindItem:
 
 
 class TestProcessData:
-    """Тесты для process_data"""
+    """Тесты для process_data"""  
     
     def test_complete_data(self):
         """Полные данные - работает"""
@@ -77,7 +82,7 @@ class TestProcessData:
 
 
 class TestDivideNumbers:
-    """Тесты для divide_numbers"""
+    """Тесты для divide_numbers"""  
     
     def test_normal_division(self):
         """Обычное деление"""
@@ -92,7 +97,7 @@ class TestDivideNumbers:
 
 
 class TestGetElementSafe:
-    """Тесты для get_element_safe"""
+    """Тесты для get_element_safe"""  
     
     def test_valid_index(self):
         """Валидный индекс"""
@@ -112,7 +117,7 @@ class TestGetElementSafe:
 
 
 class TestFibonacci:
-    """Тесты для fibonacci"""
+    """Тесты для fibonacci"""  
     
     def test_zero(self):
         """F(0) = 0"""

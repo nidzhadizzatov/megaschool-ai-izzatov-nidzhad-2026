@@ -7,8 +7,6 @@
 def calculate_average(numbers: list) -> float:
     """Вычисляет среднее значение списка чисел.
     
-    BUG: Деление на ноль при пустом списке!
-    
     Args:
         numbers: Список чисел
         
@@ -24,8 +22,6 @@ def calculate_average(numbers: list) -> float:
 
 def find_item(items: list, target: str) -> int:
     """Ищет элемент в списке и возвращает индекс.
-    
-    BUG: Off-by-one ошибка!
     
     Args:
         items: Список элементов
@@ -43,8 +39,6 @@ def find_item(items: list, target: str) -> int:
 
 def process_data(data: dict) -> dict:
     """Обрабатывает данные.
-    
-    BUG: Не проверяет наличие ключей!
     
     Args:
         data: Словарь с данными
@@ -64,8 +58,6 @@ def process_data(data: dict) -> dict:
 def divide_numbers(a: float, b: float) -> float:
     """Делит два числа.
     
-    BUG: Нет проверки деления на ноль!
-    
     Args:
         a: Делимое
         b: Делитель
@@ -82,8 +74,6 @@ def divide_numbers(a: float, b: float) -> float:
 def get_element_safe(lst: list, index: int) -> any:
     """Безопасно получает элемент списка.
     
-    BUG: На самом деле не безопасно!
-    
     Args:
         lst: Список
         index: Индекс
@@ -99,9 +89,6 @@ def get_element_safe(lst: list, index: int) -> any:
 
 def fibonacci(n: int) -> int:
     """Вычисляет n-ое число Фибоначчи.
-    
-    BUG: Неэффективная рекурсия без мемоизации!
-    BUG: Нет проверки на отрицательные числа!
     
     Args:
         n: Номер числа Фибоначчи
